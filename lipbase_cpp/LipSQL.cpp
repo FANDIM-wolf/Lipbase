@@ -3,120 +3,84 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include "implementation.cpp";
+#include <regex>
 
-
-
-class Record {
-public:
-    std::string type;
-    int id;  // Identifier for the Record
-    bool isIdRecord;  // Flag to determine if Record is an ID Record or not
-    int row;
-    int column;
-    int intValue;
-    double doubleValue;
-
-    Record(std::string t, int r, int c, int iVal = 0, double dVal = 0.0, bool idRec = false)
-        : type(t), row(r), column(c), intValue(iVal), doubleValue(dVal), isIdRecord(idRec) {}
-};
-
-class Table {
-public:
-    std::vector<Record> records;
-
-    std::vector<std::string> names;
-    std::vector<std::string> data;
-    int rows;
-    int columns;
-    int lastId;  // Last assigned ID
-
-    Table(int r, int c) : rows(r), columns(c), lastId(0) {}
-    int getLastId()  {
-        return this->lastId;
-    }
-    void create_table(int nrows, int ncols, const std::vector<std::string>& names_of_columns, const std::vector<std::string>& types_of_columns) {
-        rows = nrows;
-        columns = ncols;
-        names = names_of_columns;
-        data = types_of_columns;
-        // Note: You may want to initialize `records`, `records_int`, and `records_double` as well, based on the input values
-    }
-
-    void insert_data(std::vector<Record> row) {
-        if (row.size() > columns) {
-            throw std::logic_error("Number of records in the row does not match table's columns");
-        }
-        //std::cout << row.size() << std::endl;
-        
-
-         for (int i = 0; i < row.size(); ++i) {
-             auto& record = row[i];
-
-             if (record.column == 1) {  // First column is always "id"
-                 record.isIdRecord = true;
-                 record.id = this->lastId++;
-                 
-                 records.push_back(record);
-             }
-             else if (record.type == "int") {
-                 record.id = NULL;
-                 records.push_back(record);
-             }
-             else if (record.type == "double") {
-                 record.id = NULL;
-                 records.push_back(record);
-             }
-             else {
-                 throw std::logic_error("Unsupported record type");
-             }
-
-         }
-
-         
-    }
-    void getAllData() {
-        for (const auto& record : records) {
-            std::cout << "Type: " << record.type
-                << ", ID: " << record.id
-                << ", Row: " << record.row
-                << ", Column: " << record.column
-                << ", Int Value: " << record.intValue
-                << ", Double Value: " << record.doubleValue
-                << ", Is ID Record: " << (record.isIdRecord ? "true" : "false")
-                << std::endl;
-
-        }
-    }
-
-
-};
 
 int main() {
-    
-    Table table(5, 5); // Create a table with 5 rows and 5 columns
+    /*
 
-    Record record("int", 1, 1, 1, 0, false);
-    Record record1("double", 2, 1, 0, 2.2, false);
-    Record record2("double", 3, 1, 0, 2.2, false);
-    Record record3("double", 4, 1, 0, 2.2, false);
-    std::vector<Record> records;
-    std::vector<Record> records1;
-    records.push_back(record);
-    records1.push_back(record1);
-    records1.push_back(record2);
-    records1.push_back(record3);
-    table.create_table(5, 5, { "id" , "c1" , "c2" , "c3" , "c4" }, { "int" , "double" ,"double ",  "double" ,"double " });
-    // Use the getter function to retrieve the lastId
-    
-    // Assume that `records` is an already constructed vector of Records
-    table.insert_data(records);
-    table.insert_data(records1);
-    table.getAllData();
-    // Use the getter function to retrieve the lastId
-    //int lastId = table.getLastId();
-    //std::cout << "The last used ID is: " << lastId << std::endl;
-    int exit;
-    std::cin >>exit ;
+
+    //grab arguments  from string "CREATE TABLE rows = 5 columns = 5 WITH id(int) , c1(double) ,  c2(double) , c3(double) , c4(double) ;"  and save this data in some variables  "
+
+    std::string str = "CREATE TABLE rows = 5 columns = 5 WITH id(int) , c1(double) , c2(double) , c3(double) , c4(double) , c5(double) ;";
+    int rows, columns;
+    std::vector<std::pair<std::string, std::string>> fields;
+
+    std::regex e1("rows = (\\d+)");
+    std::regex e2("columns = (\\d+)");
+    std::regex e3("(\\w+)\\((\\w+)\\)");
+
+    std::smatch match;
+    if (std::regex_search(str, match, e1)) {
+        rows = std::stoi(match.str(1));
+    }
+    if (std::regex_search(str, match, e2)) {
+        columns = std::stoi(match.str(1));
+    }
+
+    auto words_begin = std::sregex_iterator(str.begin(), str.end(), e3);
+    auto words_end = std::sregex_iterator();
+    for (std::sregex_iterator i = words_begin; i != words_end; ++i) {
+        std::smatch match = *i;
+        fields.push_back(std::make_pair(match.str(1), match.str(2)));
+    }
+
+    std::cout << "Rows: " << rows << ", Columns: " << columns << std::endl;
+    for (const auto& field : fields) {
+        std::cout << "Column name: " << field.first << ", Type: " << field.second << std::endl;
+    }
+
+    */
+
+    // Create a table with 2 rows and 3 columns
+    // Creating a table with 3 rows and 3 columns
+    Table t(3, 3);
+
+    // Inserting data into the table row-by-row
+    // The data is completely made-up and may not make sense in a real world application.
+
+    // For row 0
+    t.insert_data(Record("integer", 0, 0, 1, std::nullopt));  // ID = 1
+    t.insert_data(Record("integer", 0, 1, 25, std::nullopt));  // Age = 25
+    t.insert_data(Record("double", 0, 2, std::nullopt, 92.5));  // Score = 92.5
+    // For row 1
+    t.insert_data(Record("integer", 1, 0, 1, std::nullopt));  // ID = 1
+    t.insert_data(Record("integer", 1, 1, 25, std::nullopt));  // Age = 25
+    t.insert_data(Record("double", 1, 2, std::nullopt, 92.1));  // Score = 92.5
+
+
+    // Similar data for row 1 and row 2 can be inserted here (not shown)...
+
+    // Creating conditions
+    Conditon con1; con1.value_integer = 1;  // Condition on Id
+    Conditon con2; con2.value_integer = 25;  // Condition on Age
+    Conditon con3; con3.value_double = 92.5;  // Condition on Score
+    std::vector<Conditon> conditions = { con1, con2, con3 };
+
+    // Selecting data from the table based on conditions
+    std::vector<Record> selected_records = t.select_data(conditions);
+
+    // Print selected data
+    for (const auto& record : selected_records) {
+        if (record.intValue.has_value()) {
+            std::cout << "Row: " << record.row << ", Col: " << record.col << ", Value: " << record.intValue.value() << std::endl;
+        }
+        else if (record.doubleValue.has_value()) {
+            std::cout << "Row: " << record.row << ", Col: " << record.col << ", Value: " << record.doubleValue.value() << std::endl;
+        }
+    }
+
     return 0;
 }
 
