@@ -56,7 +56,7 @@ int main() {
         }
     }
 
-    std::cout << "updating2" << std::endl;
+    std::cout << "updating" << std::endl;
     // Updating data from the table based on conditions
     Conditon up1; up1.value_integer = 12;  // Condition on Id
     Conditon up2; up2.value_integer = 21;  // Condition on Age
