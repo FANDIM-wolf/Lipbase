@@ -1,5 +1,5 @@
 # Lipbase
-Lite database for clustering ml tasks 
+Lite database for clustering and  ml tasks 
 
 
 1) Lipbase folder -  implementaion for python
